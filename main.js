@@ -1,6 +1,6 @@
 const fileInput = document.getElementById("fileInput");
 const convertBtn = document.getElementById("convertBtn");
-const status = document.getElementById("status");
+const statusOutput = document.getElementById("statusOutput");
 const downloadBtn = document.getElementById("downloadBtn");
 
 convertBtn.addEventListener("click", convertXML);
