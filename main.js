@@ -20,7 +20,11 @@ const DOM = {
     downloadBtn: document.getElementById("downloadBtn"),
     xmlSize: document.getElementById("xmlSize"),
     xlsxSize: document.getElementById("xlsxSize"),
-    compressionRatio: document.getElementById("compressionRatio"), };
+    compressionRatio: document.getElementById("compressionRatio"), 
+    progressBar: document.getElementById("progressBar"),
+    progressText: document.getElementById("progressText"),
+};
+
 
 //=============================================================================
 // UI
@@ -38,6 +42,9 @@ const UI = {
         DOM.downloadBtn.href = url;
         DOM.downloadBtn.download = filename;
         DOM.downloadBtn.style.display = "block";  }
+    setProgress(percent) {
+        DOM.progressBar.value = percent;
+        DOM.progressText.textContent = percent + "%";}
 };
 
 //=============================================================================
@@ -55,16 +62,19 @@ function formatSize(bytes){
 async function convertXML() {
     DOM.xlsxSize.textContent = "-";
     DOM.compressionRatio.textContent = "-";
+    UI.setProgress(0);
     try {
         UI.hideDownload();
         if (DOM.fileInput.files.length === 0) {
             UI.setStatus("Please select XML file.", "red");
             return;   }
         UI.setStatus("Reading XML...", "#2563eb");
+        UI.setProgress(10);
         const file = DOM.fileInput.files[0];
         DOM.xmlSize.textContent = formatSize(file.size);
         const xmlText = await file.text();
         UI.setStatus("Parsing XML...", "#2563eb");
+        UI.setProgress(20);
         const xml = new DOMParser().parseFromString(
             xmlText,
             "text/xml"  );
@@ -74,8 +84,11 @@ async function convertXML() {
         const table = findNode(worksheet, "Table");
         if (!table) {  throw new Error("Table not found.");  }
         const rows = findChildren(table, "Row");
+        UI.setProgress(30);
         const aoa = [];
-        for (const row of rows) {
+        const totalRows = rows.length;
+            for (let i = 0; i < totalRows; i++) {
+            const row = rows[i];
             const rowData = [];
             const cells = findChildren(row, "Cell");
             for (const cell of cells) {
@@ -84,7 +97,9 @@ async function convertXML() {
                     rowData.push("");
                     continue;  }
                 rowData.push(data.textContent ?? "");       }
-                aoa.push(rowData);  }
+                aoa.push(rowData);  
+                if (i % 200 === 0) {UI.setProgress(30 + Math.floor(i / totalRows * 50));
+                await new Promise(requestAnimationFrame); }}
 //=============================================================================
 // Smart ISO Date + XML Cleanup
 //=============================================================================
@@ -113,7 +128,8 @@ for (let r = 1; r < aoa.length; r++) {
         const dt = parseISODateTime(v);
         if (dt)
             aoa[r][c] = dt;  }  }
-UI.setStatus("Creating workbook...", "#2563eb");
+    UI.setStatus("Creating workbook...", "#2563eb");
+    UI.setProgress(85);
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(aoa);
     for (const addr in ws) {  if (addr.startsWith("!"))  continue;
@@ -138,6 +154,7 @@ UI.setStatus("Creating workbook...", "#2563eb");
         type: "array",
         compression: true,
         cellDates: true  }  );
+        UI.setProgress(95);
         const blob = new Blob(
             [wbout],  {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } ); 
@@ -146,6 +163,7 @@ UI.setStatus("Creating workbook...", "#2563eb");
         const filename =  file.name.replace(/\.xml$/i, "") + "_output.xlsx";
         UI.showDownload(blob, filename);
         UI.setStatus(  `Done (${aoa.length} rows)`,  "#16a34a" );
+        UI.setProgress(100);
     }
     catch (err) {
         console.error(err);
