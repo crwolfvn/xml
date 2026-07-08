@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML → Excel XLSX</title>
+
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🧾 XML → Excel XLSX Converter</h1>
+
+    <p class="subtitle">
+        Convert Microsoft XML Spreadsheet 2003 to Excel XLSX
+    </p>
+
+    <div class="card">
+
+        <input
+            type="file"
+            id="xmlFile"
+            accept=".xml">
+
+        <button id="btnConvert">
+            🚀 Convert
+        </button>
+
+        <div id="status">
+            Ready
+        </div>
+
+        <a
+            id="downloadLink"
+            style="display:none">
+            📥 Download Excel
+        </a>
+
+    </div>
+
+</div>
+
+<script src="main.js"></script>
+
+</body>
+</html>
