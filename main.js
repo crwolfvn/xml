@@ -41,7 +41,7 @@ const UI = {
         const url = URL.createObjectURL(blob);
         DOM.downloadBtn.href = url;
         DOM.downloadBtn.download = filename;
-        DOM.downloadBtn.style.display = "block";  }
+        DOM.downloadBtn.style.display = "block";  },
     setProgress(percent) {
         DOM.progressBar.value = percent;
         DOM.progressText.textContent = percent + "%";}
