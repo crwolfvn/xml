@@ -253,3 +253,17 @@ DOM.convertBtn.addEventListener(
     "click",
     convertXML
 );
+DOM.fileInput.addEventListener("change", () => {
+
+    if (DOM.fileInput.files.length === 0) {
+
+        DOM.xmlSize.textContent = "-";
+        return;
+
+    }
+
+    const file = DOM.fileInput.files[0];
+
+    DOM.xmlSize.textContent = formatSize(file.size);
+
+});
