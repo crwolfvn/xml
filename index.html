@@ -11,79 +11,102 @@
     <link rel="icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
 
+    <!-- SheetJS -->
     <script src="xlsx.full.min.js"></script>
 
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <header>
+        <div class="card">
 
-        <h1>
-            🧾 XML → Excel XLSX Converter
-        </h1>
+            <header>
 
-        <p class="subtitle">
-            Convert Microsoft XML Spreadsheet 2003 to Excel XLSX
-        </p>
+                <h1>
+                    🧾 XML Spreadsheet 2003
+                </h1>
 
-    </header>
+                <h2>
+                    → Excel XLSX Converter
+                </h2>
 
-    <main class="card">
+                <p>
+                    Convert Microsoft XML Spreadsheet 2003 into modern Excel Workbook
+                </p>
 
-        <section class="file-section">
+            </header>
 
-            <label for="fileInput" class="section-title">
-                📂 Select XML File
-            </label>
+            <hr>
 
-            <input
-                id="fileInput"
-                type="file"
-                accept=".xml">
+            <section>
 
-        </section>
+                <label class="section-title" for="fileInput">
+                    📂 Select XML File
+                </label>
 
-        <section class="button-section">
+                <input
+                    id="fileInput"
+                    type="file"
+                    accept=".xml">
 
-            <button id="convertBtn">
-                🚀 Convert
-            </button>
+            </section>
 
-        </section>
+            <section>
 
-        <section class="status-section">
+                <button
+                    id="convertBtn"
+                    type="button">
 
-            <div class="section-title">
-                📋 Status
-            </div>
+                    🚀 Convert
 
-            <div id="statusOutput">
-                Ready
-            </div>
+                </button>
 
-        </section>
+            </section>
 
-        <section class="download-section">
+            <section>
 
-            <a
-                id="downloadBtn"
-                style="display:none"
-                download>
+                <div class="section-title">
+                    📋 Status
+                </div>
 
-                📥 Download Excel
+                <div id="statusOutput">
 
-            </a>
+                    Ready
 
-        </section>
+                </div>
 
-    </main>
+            </section>
 
-</div>
+            <section>
 
-<script src="main.js"></script>
+                <a
+                    id="downloadBtn"
+                    download
+                    style="display:none;">
+
+                    📥 Download Excel
+
+                </a>
+
+            </section>
+
+        </div>
+
+        <footer>
+
+            XML Spreadsheet 2003 → Excel XLSX
+
+            <br>
+
+            Version 1.0.0
+
+        </footer>
+
+    </div>
+
+    <script src="main.js"></script>
 
 </body>
 
