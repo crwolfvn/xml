@@ -1,52 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XML → Excel XLSX</title>
+
+    <title>XML Spreadsheet 2003 → Excel XLSX</title>
 
     <link rel="icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
 
     <script src="xlsx.full.min.js"></script>
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>🧾 XML → Excel XLSX Converter</h1>
+    <header>
 
-    <p class="subtitle">
-        Convert Microsoft XML Spreadsheet 2003 to Excel XLSX
-    </p>
+        <h1>
+            🧾 XML → Excel XLSX Converter
+        </h1>
 
-    <div class="card">
+        <p class="subtitle">
+            Convert Microsoft XML Spreadsheet 2003 to Excel XLSX
+        </p>
 
-        <input
-            type="file"
-            id="xmlFile"
-            accept=".xml">
+    </header>
 
-        <button id="btnConvert">
-            🚀 Convert
-        </button>
+    <main class="card">
 
-        <div id="status">
-            Ready
-        </div>
+        <section class="file-section">
 
-        <a
-            id="downloadLink"
-            style="display:none">
-            📥 Download Excel
-        </a>
+            <label for="fileInput" class="section-title">
+                📂 Select XML File
+            </label>
 
-    </div>
+            <input
+                id="fileInput"
+                type="file"
+                accept=".xml">
+
+        </section>
+
+        <section class="button-section">
+
+            <button id="convertBtn">
+                🚀 Convert
+            </button>
+
+        </section>
+
+        <section class="status-section">
+
+            <div class="section-title">
+                📋 Status
+            </div>
+
+            <div id="statusOutput">
+                Ready
+            </div>
+
+        </section>
+
+        <section class="download-section">
+
+            <a
+                id="downloadBtn"
+                style="display:none"
+                download>
+
+                📥 Download Excel
+
+            </a>
+
+        </section>
+
+    </main>
 
 </div>
 
 <script src="main.js"></script>
 
 </body>
+
 </html>
