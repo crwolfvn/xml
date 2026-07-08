@@ -140,12 +140,88 @@ async function convertXML() {
             aoa.push(rowData);
 
         }
+//=============================================================================
+// Smart ISO Date + XML Cleanup
+//=============================================================================
 
+const isoDateRegex =
+    /^\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?)?$/;
+
+const dateColumns = new Set();
+
+if (aoa.length >= 3) {
+
+    // Detect columns from row 3 (same logic as Python)
+    for (let c = 0; c < aoa[2].length; c++) {
+
+        const v = aoa[2][c];
+
+        if (typeof v === "string" && isoDateRegex.test(v)) {
+            dateColumns.add(c);
+        }
+
+    }
+
+}
+
+for (let r = 1; r < aoa.length; r++) {
+
+    for (let c = 0; c < aoa[r].length; c++) {
+
+        let v = aoa[r][c];
+
+        if (typeof v !== "string")
+            continue;
+
+        // XML Cleanup
+        if (v.startsWith("<")) {
+            aoa[r][c] = "";
+            continue;
+        }
+
+        // ISO Date
+        if (!dateColumns.has(c))
+            continue;
+
+        if (!isoDateRegex.test(v))
+            continue;
+
+        const d = new Date(v);
+
+        if (!isNaN(d)) {
+            aoa[r][c] = d;
+        }
+
+    }
+
+}
         UI.setStatus("Creating workbook...", "#2563eb");
 
         const wb = XLSX.utils.book_new();
 
         const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+        for (const addr in ws) {
+
+    if (addr.startsWith("!"))
+        continue;
+
+    const cell = ws[addr];
+
+    if (cell.v instanceof Date) {
+
+        cell.t = "d";
+
+        cell.z =
+            cell.v.getHours() ||
+            cell.v.getMinutes() ||
+            cell.v.getSeconds()
+                ? "yyyy-mm-dd hh:mm:ss"
+                : "yyyy-mm-dd";
+
+    }
+
+}
 
         const sheetName =
             getAttribute(worksheet, "Name") || "Sheet1";
