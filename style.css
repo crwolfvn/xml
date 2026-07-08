@@ -289,3 +289,32 @@ footer{
     }
 
 }
+/*============================================================
+    File Information
+============================================================*/
+
+#fileInfo{
+
+    margin-top:12px;
+
+    padding:14px;
+
+    border:1px solid #d8d8d8;
+
+    border-radius:8px;
+
+    background:#fafafa;
+
+    line-height:1.9;
+
+    font-size:16px;
+
+}
+
+#fileInfo span{
+
+    font-weight:700;
+
+    color:#2563eb;
+
+}

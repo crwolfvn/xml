@@ -18,7 +18,9 @@ const DOM = {
     convertBtn: document.getElementById("convertBtn"),
     statusOutput: document.getElementById("statusOutput"),
     downloadBtn: document.getElementById("downloadBtn")
-};
+    xmlSize: document.getElementById("xmlSize"),
+    xlsxSize: document.getElementById("xlsxSize"),
+    compressionRatio: document.getElementById("compressionRatio"), };
 
 //=============================================================================
 // UI
@@ -51,6 +53,20 @@ const UI = {
 //=============================================================================
 // MAIN
 //=============================================================================
+function formatSize(bytes){
+
+    if(bytes < 1024)
+        return bytes + " B";
+
+    if(bytes < 1024 * 1024)
+        return (bytes / 1024).toFixed(1) + " KB";
+
+    if(bytes < 1024 * 1024 * 1024)
+        return (bytes / 1024 / 1024).toFixed(1) + " MB";
+
+    return (bytes / 1024 / 1024 / 1024).toFixed(2) + " GB";
+
+}
 
 async function convertXML() {
 
@@ -153,10 +169,13 @@ async function convertXML() {
                 type:
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             }
+            DOM.xlsxSize.textContent = formatSize(blob.size);
+            DOM.compressionRatio.textContent = (file.size / blob.size).toFixed(1) + " : 1";
         );
 
         const filename =
             file.name.replace(/\.xml$/i, "") + "_output.xlsx";
+        DOM.xmlSize.textContent = formatSize(file.size);
 
         UI.showDownload(blob, filename);
 
