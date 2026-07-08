@@ -142,7 +142,8 @@ async function convertXML() {
             wb,
             {
                 bookType: "xlsx",
-                type: "array"
+                type: "array",
+                compression: true
             }
         );
 
