@@ -1,113 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+<section>
 
-<head>
+    <div class="section-title">
+        📊 File Information
+    </div>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div id="fileInfo">
 
-    <title>XML Spreadsheet 2003 → Excel XLSX</title>
-
-    <link rel="icon" href="favicon.ico">
-    <link rel="stylesheet" href="style.css">
-
-    <!-- SheetJS -->
-    <script src="xlsx.full.min.js"></script>
-
-</head>
-
-<body>
-
-    <div class="container">
-
-        <div class="card">
-
-            <header>
-
-                <h1>
-                    🧾 XML Spreadsheet 2003
-                </h1>
-
-                <h2>
-                    → Excel XLSX Converter
-                </h2>
-
-                <p>
-                    Convert Microsoft XML Spreadsheet 2003 into modern Excel Workbook
-                </p>
-
-            </header>
-
-            <hr>
-
-            <section>
-
-                <label class="section-title" for="fileInput">
-                    📂 Select XML File
-                </label>
-
-                <input
-                    id="fileInput"
-                    type="file"
-                    accept=".xml">
-
-            </section>
-
-            <section>
-
-                <button
-                    id="convertBtn"
-                    type="button">
-
-                    🚀 Convert
-
-                </button>
-
-            </section>
-
-            <section>
-
-                <div class="section-title">
-                    📋 Status
-                </div>
-
-                <div id="statusOutput">
-
-                    Ready
-
-                </div>
-
-            </section>
-
-            <section>
-
-                <a
-                    id="downloadBtn"
-                    download
-                    style="display:none;">
-
-                    📥 Download Excel
-
-                </a>
-
-            </section>
-
+        <div>
+            XML Size :
+            <span id="xmlSize">-</span>
         </div>
 
-        <footer>
+        <div>
+            XLSX Size :
+            <span id="xlsxSize">-</span>
+        </div>
 
-            XML Spreadsheet 2003 → Excel XLSX
-
-            <br>
-
-            Version 1.0.0
-
-        </footer>
+        <div>
+            Compression :
+            <span id="compressionRatio">-</span>
+        </div>
 
     </div>
 
-    <script src="main.js"></script>
-
-</body>
-
-</html>
+</section>
