@@ -140,27 +140,25 @@ async function convertXML() {
             aoa.push(rowData);
 
         }
-//=============================================================================
+        //=============================================================================
 // Smart ISO Date + XML Cleanup
 //=============================================================================
 
-const isoDateRegex =
-    /^\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?)?$/;
+function parseISODateTime(text) {
 
-const dateColumns = new Set();
+    if (typeof text !== "string")
+        return null;
 
-if (aoa.length >= 3) {
+    // XML chuẩn: YYYY-MM-DDTHH:MM:SS
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(text))
+        return null;
 
-    // Detect columns from row 3 (same logic as Python)
-    for (let c = 0; c < aoa[2].length; c++) {
+    const [datePart, timePart] = text.split("T");
 
-        const v = aoa[2][c];
+    const [y, m, d] = datePart.split("-").map(Number);
+    const [hh, mm, ss] = timePart.split(":").map(Number);
 
-        if (typeof v === "string" && isoDateRegex.test(v)) {
-            dateColumns.add(c);
-        }
-
-    }
+    return new Date(y, m - 1, d, hh, mm, ss);
 
 }
 
@@ -168,33 +166,31 @@ for (let r = 1; r < aoa.length; r++) {
 
     for (let c = 0; c < aoa[r].length; c++) {
 
-        let v = aoa[r][c];
+        const v = aoa[r][c];
 
         if (typeof v !== "string")
             continue;
 
         // XML Cleanup
         if (v.startsWith("<")) {
+
             aoa[r][c] = "";
             continue;
+
         }
 
-        // ISO Date
-        if (!dateColumns.has(c))
-            continue;
+        // ISO DateTime
+        const dt = parseISODateTime(v);
 
-        if (!isoDateRegex.test(v))
-            continue;
-
-        const d = new Date(v);
-
-        if (!isNaN(d)) {
-            aoa[r][c] = d;
-        }
+        if (dt)
+            aoa[r][c] = dt;
 
     }
 
 }
+
+
+
         UI.setStatus("Creating workbook...", "#2563eb");
 
         const wb = XLSX.utils.book_new();
@@ -233,13 +229,14 @@ for (let r = 1; r < aoa.length; r++) {
         );
 
         const wbout = XLSX.write(
-            wb,
-            {
-                bookType: "xlsx",
-                type: "array",
-                compression: true
-            }
-        );
+    wb,
+    {
+        bookType: "xlsx",
+        type: "array",
+        compression: true,
+        cellDates: true
+    }
+);
 
         const blob = new Blob(
             [wbout],
