@@ -151,10 +151,12 @@ async function convertXML() {
             const dt = parseISODateTime(v);
             if (dt) {aoa[r][c] = dt; continue;}
             if (numberColumns[c]) {aoa[r][c] = convertNumberCell(v);}  }
+            if (r % 200 === 0) {UI.setProgress(80 + Math.floor(r / aoa.length * 12));
+                await new Promise(requestAnimationFrame); }
     }
 
     UI.setStatus("Đang dựng file Xlsx...", "#2563eb");
-    UI.setProgress(85);
+    UI.setProgress(94);
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(aoa);
     for (const addr in ws) {  if (addr.startsWith("!"))  continue;
