@@ -159,7 +159,7 @@ for (let r = 1; r < aoa.length; r++) {
             [wbout],  {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } ); 
         DOM.xlsxSize.textContent = formatSize(blob.size);
-        DOM.compressionRatio.textContent = (file.size / blob.size).toFixed(1) + " : 1";
+        DOM.compressionRatio.textContent = (blob.size / file.size * 100).toFixed(2) + "%";
         const filename =  file.name.replace(/\.xml$/i, "") + "_output.xlsx";
         UI.showDownload(blob, filename);
         UI.setStatus(  `Đã xử lý xong ! (${aoa.length} rows)`,  "#16a34a" );
