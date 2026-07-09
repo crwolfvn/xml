@@ -88,7 +88,7 @@ async function convertXML() {
             UI.setStatus("Chưa chọn file XML cần chuyển!", "red");
             return;   }
         UI.setStatus("Đang nạp file XML...", "#2563eb");
-        UI.setProgress(10);
+        UI.setProgress(6);
         const file = DOM.fileInput.files[0];
         DOM.xmlSize.textContent = formatSize(file.size);
         const xmlText = await file.text();
@@ -157,6 +157,7 @@ async function convertXML() {
 
     UI.setStatus("Đang dựng file Xlsx...", "#2563eb");
     UI.setProgress(94);
+    await new Promise(requestAnimationFrame);
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(aoa);
     for (const addr in ws) {  if (addr.startsWith("!"))  continue;
@@ -181,7 +182,8 @@ async function convertXML() {
         type: "array",
         compression: true,
         cellDates: true  }  );
-        UI.setProgress(95);
+        UI.setProgress(97);
+        await new Promise(requestAnimationFrame);
         const blob = new Blob(
             [wbout],  {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } ); 
