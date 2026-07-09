@@ -66,14 +66,14 @@ async function convertXML() {
     try {
         UI.hideDownload();
         if (DOM.fileInput.files.length === 0) {
-            UI.setStatus("Please select XML file.", "red");
+            UI.setStatus("Chưa chọn file XML cần chuyển!", "red");
             return;   }
-        UI.setStatus("Reading XML...", "#2563eb");
+        UI.setStatus("Đang nạp file XML...", "#2563eb");
         UI.setProgress(10);
         const file = DOM.fileInput.files[0];
         DOM.xmlSize.textContent = formatSize(file.size);
         const xmlText = await file.text();
-        UI.setStatus("Parsing XML...", "#2563eb");
+        UI.setStatus("Đang xử lý file XML...", "#2563eb");
         UI.setProgress(20);
         const xml = new DOMParser().parseFromString(
             xmlText,
@@ -128,7 +128,7 @@ for (let r = 1; r < aoa.length; r++) {
         const dt = parseISODateTime(v);
         if (dt)
             aoa[r][c] = dt;  }  }
-    UI.setStatus("Creating workbook...", "#2563eb");
+    UI.setStatus("Đang dựng file Xlsx...", "#2563eb");
     UI.setProgress(85);
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(aoa);
@@ -162,7 +162,7 @@ for (let r = 1; r < aoa.length; r++) {
         DOM.compressionRatio.textContent = (file.size / blob.size).toFixed(1) + " : 1";
         const filename =  file.name.replace(/\.xml$/i, "") + "_output.xlsx";
         UI.showDownload(blob, filename);
-        UI.setStatus(  `Done (${aoa.length} rows)`,  "#16a34a" );
+        UI.setStatus(  `Đã xử lý xong ! (${aoa.length} rows)`,  "#16a34a" );
         UI.setProgress(100);
     }
     catch (err) {
