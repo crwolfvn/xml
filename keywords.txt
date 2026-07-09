@@ -28,3 +28,21 @@ Target Time
 Individual Time
 Remain. Time
 Capacity Used
+SOLLZEIT_S
+EINZELZEIT_S
+RUESTZEIT_S
+ABGEARBEITETE_S
+IST_ZEIT_S
+PEZ_IST_ZEIT_S
+Performance
+Produkt-<br>ivität
+Gesamt-<br>menge
+Gut-<br>menge
+Scrap
+Remainder
+Finished
+P1
+P2
+P3
+P4
+heimarbeit
