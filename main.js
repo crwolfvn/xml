@@ -9,6 +9,12 @@
 
 "use strict";
 
+// Nạp Thư viện Keyword để dò cột cần chuyển sang Number
+const response = await fetch("keywords.txt");
+const keywords = (await response.text())
+    .split(/\r?\n/)
+    .map(x => x.trim().toLowerCase())
+    .filter(x => x && !x.startsWith("#"));
 //=============================================================================
 // DOM
 //=============================================================================
@@ -31,6 +37,7 @@ const DOM = {
 //=============================================================================
 
 const UI = {
+        downloadUrl: null,
     setStatus(text, color = "#222") {
         DOM.statusOutput.textContent = text;
         DOM.statusOutput.style.color = color;  },
@@ -58,6 +65,18 @@ function formatSize(bytes){
     if(bytes < 1024 * 1024 * 1024)
         return (bytes / 1024 / 1024).toFixed(1) + " MB";
     return (bytes / 1024 / 1024 / 1024).toFixed(2) + " GB";   }
+
+function shouldConvertToNumber(columnName) {
+    if (!columnName) return false;
+    return keywords.some(keyword =>  columnName.toLowerCase().includes(keyword)  );  }
+
+function convertNumberCell(value) {
+    if (typeof value !== "string") return value;
+    const text = value.trim();
+    if (text === "") return "";
+    const number = Number(text.replace(/,/g, ""));
+    return Number.isNaN(number) ? value : number; }
+
 
 async function convertXML() {
     DOM.xlsxSize.textContent = "-";
@@ -100,34 +119,40 @@ async function convertXML() {
                 aoa.push(rowData);  
                 if (i % 200 === 0) {UI.setProgress(30 + Math.floor(i / totalRows * 50));
                 await new Promise(requestAnimationFrame); }}
-//=============================================================================
-// Smart ISO Date + XML Cleanup
-//=============================================================================
 
-function parseISODateTime(text) {
-    if (typeof text !== "string")  return null;
+    const headers = aoa[0] || [];
+    const numberColumns = headers.map(shouldConvertToNumber);
+                    
+        //=============================================================================
+        // Smart ISO Date + XML Cleanup
+        //=============================================================================
 
-    // XML chuẩn: YYYY-MM-DDTHH:MM:SS
-    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(text))
-        return null;
-    const [datePart, timePart] = text.split("T");
-    const [y, m, d] = datePart.split("-").map(Number);
-    const [hh, mm, ss] = timePart.split(":").map(Number);
-    return new Date(y, m - 1, d, hh, mm, ss);  }
+    function parseISODateTime(text) {
+        if (typeof text !== "string")  return null;
 
-for (let r = 1; r < aoa.length; r++) {
-    for (let c = 0; c < aoa[r].length; c++) {
-        const v = aoa[r][c];
-        if (typeof v !== "string")
-            continue;
-        // XML Cleanup
-        if (v.startsWith("<")) {
-            aoa[r][c] = "";
-            continue;  }
-        // ISO DateTime
-        const dt = parseISODateTime(v);
-        if (dt)
-            aoa[r][c] = dt;  }  }
+        // XML chuẩn: YYYY-MM-DDTHH:MM:SS
+        if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(text))
+            return null;
+        const [datePart, timePart] = text.split("T");
+        const [y, m, d] = datePart.split("-").map(Number);
+        const [hh, mm, ss] = timePart.split(":").map(Number);
+        return new Date(y, m - 1, d, hh, mm, ss);  }
+
+    for (let r = 1; r < aoa.length; r++) {
+        for (let c = 0; c < aoa[r].length; c++) {
+            const v = aoa[r][c];
+            if (typeof v !== "string")
+                continue;
+            // XML Cleanup
+            if (v.startsWith("<")) {
+                aoa[r][c] = "";
+                continue;  }
+            // ISO DateTime
+            const dt = parseISODateTime(v);
+            if (dt) {aoa[r][c] = dt; continue;}
+            if (numberColumns[c]) {aoa[r][c] = convertNumberCell(v);}  }
+    }
+
     UI.setStatus("Đang dựng file Xlsx...", "#2563eb");
     UI.setProgress(85);
     const wb = XLSX.utils.book_new();
@@ -163,8 +188,9 @@ for (let r = 1; r < aoa.length; r++) {
         const filename =  file.name.replace(/\.xml$/i, "") + "_output.xlsx";
         UI.showDownload(blob, filename);
         UI.setStatus(  `Đã xử lý xong ! (${aoa.length} rows)`,  "#16a34a" );
-        UI.setProgress(100);
-    }
+        UI.setProgress(100);  }
+
+    // Kết thúc hàm TRY     
     catch (err) {
         console.error(err);
         UI.setStatus(err.message, "red"); }  }
@@ -174,69 +200,33 @@ for (let r = 1; r < aoa.length; r++) {
 //=============================================================================
 
 function findNode(parent, localName) {
-
     for (const node of parent.children) {
-
-        if (node.localName === localName)
-            return node;
-
-    }
-
-    return null;
-
-}
+        if (node.localName === localName)  return node;  }
+    return null; }
 
 function findChildren(parent, localName) {
-
     const result = [];
-
     for (const node of parent.children) {
-
         if (node.localName === localName)
-            result.push(node);
-
-    }
-
-    return result;
-
-}
+            result.push(node);  }
+    return result;  }
 
 function getAttribute(node, name) {
-
     for (const attr of node.attributes) {
-
         if (attr.localName === name)
-            return attr.value;
-
-    }
-
-    return null;
-
-}
+            return attr.value;      }
+    return null;    }
 
 //=============================================================================
 // START
 //=============================================================================
 
 UI.hideDownload();
-
 UI.setStatus("Ready");
-
-DOM.convertBtn.addEventListener(
-    "click",
-    convertXML
-);
+DOM.convertBtn.addEventListener(  "click", convertXML );
 DOM.fileInput.addEventListener("change", () => {
-
     if (DOM.fileInput.files.length === 0) {
-
         DOM.xmlSize.textContent = "-";
-        return;
-
-    }
-
+        return;     }
     const file = DOM.fileInput.files[0];
-
-    DOM.xmlSize.textContent = formatSize(file.size);
-
-});
+    DOM.xmlSize.textContent = formatSize(file.size);    });

@@ -1,0 +1,30 @@
+# Các cột sẽ convert Text -> Number
+Qty
+Quantity
+Amount
+Price
+Cost
+Rate
+Weight
+Volume
+Length
+Width
+Height
+Stock
+Balance
+Open
+Received
+Issued
+Available
+Total
+Start_CW
+End_CW
+Line Item
+Operation
+Target Quantity
+Actual Quantity
+Remaining Qty
+Target Time
+Individual Time
+Remain. Time
+Capacity Used
